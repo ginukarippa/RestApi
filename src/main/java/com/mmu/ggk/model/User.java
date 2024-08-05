@@ -1,7 +1,6 @@
 package com.mmu.ggk.model;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,18 +12,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 @Entity
 @Table(name = "user")
-public class User implements UserDetails { /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,7 +28,17 @@ public class User implements UserDetails { /**
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Collection<Role> roles;
+    private Set<Role> roles;
+
+    // Getters and setters
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
 	public Long getId() {
 		return id;
@@ -71,41 +71,6 @@ public class User implements UserDetails { /**
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	 public Collection<Role> getRoles() {
-	        return roles;
-	    }
-
-	    public void setRoles(Collection<Role> roles) {
-	        this.roles = roles;
-	    }
-	    
-	    @Override
-	    public Collection<? extends GrantedAuthority> getAuthorities() {
-	        return roles.stream()
-	            .map(role -> new SimpleGrantedAuthority(role.getName()))
-	            .collect(Collectors.toList());
-	    }
-
-	    @Override
-	    public boolean isAccountNonExpired() {
-	        return true;
-	    }
-
-	    @Override
-	    public boolean isAccountNonLocked() {
-	        return true;
-	    }
-
-	    @Override
-	    public boolean isCredentialsNonExpired() {
-	        return true;
-	    }
-
-	    @Override
-	    public boolean isEnabled() {
-	        return true;
-	    }
-	}
-
     
+    
+}

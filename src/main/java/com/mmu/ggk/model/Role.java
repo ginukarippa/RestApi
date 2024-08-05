@@ -1,12 +1,10 @@
 package com.mmu.ggk.model;
-import java.util.Collection;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
 
 @Entity
 @Table(name = "roles")
@@ -16,10 +14,13 @@ public class Role {
     private Long id;
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
-    private Collection<User> users;
+    // Getters and setters
 
-	public Long getId() {
+    public String getName() {
+        return name;
+    }
+
+    public Long getId() {
 		return id;
 	}
 
@@ -27,21 +28,7 @@ public class Role {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Collection<User> getUsers() {
-        return users;
+        this.name = name;
     }
-
-    public void setUsers(Collection<User> users) {
-        this.users = users;
-    }
-
-   
 }

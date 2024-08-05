@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.thymeleaf.util.StringUtils;
 
 import com.mmu.ggk.model.Role;
 import com.mmu.ggk.model.User;
@@ -84,13 +84,18 @@ public class UserController {
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-		userService.deleteUser(id);
 		logAudit(id, "DELETE");
+		userService.deleteUser(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	private void logAudit(Long userId, String action) {
-		logger.info("User  ID: {}, Action: {}, Performed By: {}, Performed Date: {}", userId, action, "admin",
+		User user=userService.findUserById(userId);		
+		if(null==user.getUsername() || StringUtils.isEmpty(user.getUsername())) {
+			user.setUsername("Admin");
+		}
+		logger.info("User  ID: {}, Action: {}, Performed By: {}, Performed Date: {}", userId, action, user.getUsername(),
 				LocalDateTime.now());
+		userService.logAudit(userId, action);
 	}
 }
